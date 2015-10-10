@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -106,8 +103,6 @@ public class LoginActivity extends Activity {
             if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
                 Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
                 String personName = currentPerson.getDisplayName();
-//                String personPhoto = currentPerson.getImage().getUrl();
-//                String personGooglePlusProfile = currentPerson.getUrl();
                 Toast.makeText(LoginActivity.this, "Signed in as "+personName, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);

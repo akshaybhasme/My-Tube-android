@@ -5,30 +5,33 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 public class SearchFragment extends Fragment {
 
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-
-    public static SearchFragment newInstance(int sectionNumber) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public SearchFragment() {
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-        return rootView;
+
+        ListView videoListView;
+        VideoListAdapter adapter;
+
+        videoListView = new ListView(getActivity());
+        adapter = new VideoListAdapter(getActivity());
+        videoListView.setAdapter(adapter);
+
+        videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+        });
+
+        return videoListView;
     }
 }

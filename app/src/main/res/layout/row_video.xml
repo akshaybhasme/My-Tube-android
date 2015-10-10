@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivVideoThumbnail"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/abc_ab_share_pack_holo_dark" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/ivVideoThumbnail"
+        android:layout_alignBottom="@+id/ivVideoThumbnail"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tvVideoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Video Title"
+            android:textStyle="bold"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/tvVideoDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvVideoTitle"
+            android:text="A very long video description will come here."
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

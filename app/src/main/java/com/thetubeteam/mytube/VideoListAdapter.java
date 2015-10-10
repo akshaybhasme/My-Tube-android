@@ -5,6 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.thetubeteam.mytube.modals.Video;
 
@@ -15,13 +18,16 @@ public class VideoListAdapter extends BaseAdapter {
 
     private List<Video> videos = new ArrayList<>();
     private LayoutInflater inflater;
+    private Context context;
 
     public VideoListAdapter(Context context){
+        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
     public void setVideos(List<Video> videos){
         this.videos = videos;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -40,7 +46,28 @@ public class VideoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        return null;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        final ViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = inflater.inflate(R.layout.row_video, new LinearLayout(context));
+            viewHolder = new ViewHolder();
+            viewHolder.name = (TextView) convertView.findViewById(R.id.tvVideoTitle);
+            viewHolder.desc = (TextView) convertView.findViewById(R.id.tvVideoDesc);
+            convertView.setTag(viewHolder);
+            convertView.setTag(R.id.tvVideoTitle, viewHolder.name);
+            convertView.setTag(R.id.tvVideoDesc, viewHolder.desc);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        viewHolder.name.setText(videos.get(position).getName());
+        viewHolder.desc.setText(videos.get(position).getDesc());
+
+        return convertView;
+    }
+
+    public static class ViewHolder{
+        ImageView thumbail;
+        TextView name, desc;
     }
 }

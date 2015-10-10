@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.thetubeteam.mytube.modals.Video;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlaylistFragment extends Fragment {
 
     public static PlaylistFragment newInstance() {
@@ -27,6 +32,17 @@ public class PlaylistFragment extends Fragment {
         videoListView = new ListView(getActivity());
         adapter = new VideoListAdapter(getActivity());
         videoListView.setAdapter(adapter);
+
+        List<Video> videos = new ArrayList<>();
+
+        for(int i = 0; i < 20; i++){
+            Video video = new Video();
+            video.setName("Title "+i);
+            video.setDesc("Description "+i);
+            videos.add(video);
+        }
+
+        adapter.setVideos(videos);
 
         videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

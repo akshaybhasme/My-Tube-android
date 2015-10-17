@@ -25,4 +25,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.android.gms:play-services-identity:8.1.0'
     compile 'com.google.android.gms:play-services-plus:8.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

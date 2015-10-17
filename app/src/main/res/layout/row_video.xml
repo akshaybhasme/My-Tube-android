@@ -5,17 +5,16 @@
 
     <ImageView
         android:id="@+id/ivVideoThumbnail"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
+        android:layout_width="125dp"
+        android:layout_height="80dp"
         android:layout_alignParentLeft="true"
         android:src="@drawable/abc_ab_share_pack_holo_dark" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/ivVideoThumbnail"
-        android:layout_alignBottom="@+id/ivVideoThumbnail"
-        android:padding="10dp">
+        android:layout_toRightOf="@+id/ivVideoThumbnail"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/tvVideoTitle"
@@ -23,7 +22,8 @@
             android:layout_height="wrap_content"
             android:text="Video Title"
             android:textStyle="bold"
-            android:textSize="20sp"/>
+            android:textSize="14sp"
+            android:layout_alignParentTop="true"/>
 
         <TextView
             android:id="@+id/tvVideoDesc"
@@ -31,8 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvVideoTitle"
             android:text="A very long video description will come here."
-            android:textStyle="bold"
-            android:textSize="14sp"/>
+            android:textSize="10sp"/>
 
     </RelativeLayout>
 

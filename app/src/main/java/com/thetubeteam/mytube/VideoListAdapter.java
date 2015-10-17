@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.thetubeteam.mytube.models.Video;
 
 import java.util.ArrayList;
@@ -40,6 +41,10 @@ public class VideoListAdapter extends BaseAdapter {
         return videos.get(i);
     }
 
+    public Video getVideo(int i) {
+        return videos.get(i);
+    }
+
     @Override
     public int getCount() {
         return videos.size();
@@ -53,6 +58,7 @@ public class VideoListAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.tvVideoTitle);
             viewHolder.desc = (TextView) convertView.findViewById(R.id.tvVideoDesc);
+            viewHolder.thumbail = (ImageView) convertView.findViewById(R.id.ivVideoThumbnail);
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.tvVideoTitle, viewHolder.name);
             convertView.setTag(R.id.tvVideoDesc, viewHolder.desc);
@@ -62,6 +68,7 @@ public class VideoListAdapter extends BaseAdapter {
 
         viewHolder.name.setText(videos.get(position).getName());
         viewHolder.desc.setText(videos.get(position).getDesc());
+        Picasso.with(context).load(videos.get(position).getThumbnail()).into(viewHolder.thumbail);
 
         return convertView;
     }

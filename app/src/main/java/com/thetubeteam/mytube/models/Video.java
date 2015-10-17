@@ -2,6 +2,7 @@ package com.thetubeteam.mytube.models;
 
 public class Video {
 
+    private String id;
     private String name;
     private String desc;
     private String thumbnail;
@@ -10,8 +11,6 @@ public class Video {
     public void setId(String id) {
         this.id = id;
     }
-
-    private String id;
 
     public void setName(String name) {
         this.name = name;

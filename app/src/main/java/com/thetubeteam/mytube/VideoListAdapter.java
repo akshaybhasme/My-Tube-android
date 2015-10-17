@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.thetubeteam.mytube.modals.Video;
+import com.thetubeteam.mytube.models.Video;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.thetubeteam.mytube.modals.Video;
+import com.thetubeteam.mytube.models.Video;
 
 import java.util.ArrayList;
 import java.util.List;

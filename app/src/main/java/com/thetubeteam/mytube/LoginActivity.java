@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.Scopes;
@@ -24,23 +26,18 @@ public class LoginActivity extends Activity {
     /* RequestCode for resolutions involving sign-in */
     private static final int RC_SIGN_IN = 1;
 
-    /* RequestCode for resolutions to get GET_ACCOUNTS permission on M */
-    private static final int RC_PERM_GET_ACCOUNTS = 2;
-
     /* Is there a ConnectionResult resolution in progress? */
     private boolean mIsResolving = false;
 
     /* Should we automatically resolve ConnectionResults when possible? */
     private boolean mShouldResolve = false;
 
-    GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        Log.e(TAG, "onCreate");
 
         findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
 
@@ -75,7 +72,6 @@ public class LoginActivity extends Activity {
     private void onSignInClicked(){
         mShouldResolve = true;
         mGoogleApiClient.connect();
-        Toast.makeText(LoginActivity.this, "Looking for Google Accounts...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -84,7 +80,7 @@ public class LoginActivity extends Activity {
         Log.d(TAG, "onActivityResult:" + requestCode + ":" + resultCode + ":" + data);
 
         if (requestCode == RC_SIGN_IN) {
-
+            // If the error resolution was not successful we should not resolve further.
             if (resultCode != RESULT_OK) {
                 mShouldResolve = false;
             }
@@ -101,14 +97,14 @@ public class LoginActivity extends Activity {
             Log.d(TAG, "onConnected:" + bundle);
             mShouldResolve = false;
             if (Plus.PeopleApi.getCurrentPerson(mGoogleApiClient) != null) {
+                String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
                 Person currentPerson = Plus.PeopleApi.getCurrentPerson(mGoogleApiClient);
                 String personName = currentPerson.getDisplayName();
+//                String personPhoto = currentPerson.getImage().getUrl();
+//                String personGooglePlusProfile = currentPerson.getUrl();
                 Toast.makeText(LoginActivity.this, "Signed in as "+personName, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                new GetAccessTokenAsync(accountName).execute();
             }
-
         }
 
         @Override
@@ -135,6 +131,8 @@ public class LoginActivity extends Activity {
                         mGoogleApiClient.connect();
                     }
                 } else {
+                    // Could not resolve the connection result, show the user an
+                    // error dialog.
                     showErrorDialog(connectionResult);
                 }
             }
@@ -162,6 +160,35 @@ public class LoginActivity extends Activity {
 
                 mShouldResolve = false;
             }
+        }
+    }
+
+    public class GetAccessTokenAsync extends AsyncTask<String, Integer, String>{
+
+        String accountName;
+
+        public GetAccessTokenAsync(String accountName){
+            this.accountName = accountName;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String token = null;
+            try{
+                token = GoogleAuthUtil.getToken(LoginActivity.this, accountName, "oauth2:https://www.googleapis.com/auth/userinfo.profile");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return token;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+//            Toast.makeText(LoginActivity.this, s, Toast.LENGTH_LONG).show();
+            Log.e(TAG, s);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

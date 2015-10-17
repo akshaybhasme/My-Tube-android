@@ -1,4 +1,4 @@
-package com.thetubeteam.mytube.modals;
+package com.thetubeteam.mytube.models;
 
 public class Video {
 

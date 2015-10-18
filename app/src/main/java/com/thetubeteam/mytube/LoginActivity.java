@@ -185,6 +185,7 @@ public class LoginActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
 //            Toast.makeText(LoginActivity.this, s, Toast.LENGTH_LONG).show();
+//            PlaylistUpdates.ACCESS_TOKEN = s;
             Log.e(TAG, s);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);

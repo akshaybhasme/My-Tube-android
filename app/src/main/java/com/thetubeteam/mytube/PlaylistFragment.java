@@ -44,6 +44,8 @@ public class PlaylistFragment extends Fragment {
 
         adapter.setVideos(videos);
 
+        PlaylistUpdates.init();
+
         videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

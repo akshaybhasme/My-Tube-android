@@ -148,6 +148,7 @@ public class PlaylistFragment extends Fragment {
                     video.setDesc(""); //TODO
                     video.setIsFavorite(true);
                     video.setThumbnail(item.getSnippet().getThumbnails().getDefault().getUrl());
+                    video.setPlaylistItemID(item.getId());
                     videosList.add(item.getSnippet().getResourceId().getVideoId());
                     videos.add(video);
                     Log.e(TAG, video.getName());

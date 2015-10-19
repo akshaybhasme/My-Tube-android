@@ -95,13 +95,29 @@ public class VideoListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View view) {
-                    new AddToFavoriteTask(videos.get(position).getId()).execute();
+                    if(videos.get(position).getIsFavorite()){
+                       // Remove from playlist
+                        String playlistItemID = videos.get(position).getPlaylistItemID();
+                        if(playlistItemID != null)
+                            new RemoveFromFavoriteTask(playlistItemID).execute();
+                        else
+                            Toast.makeText(context, "Operation not supported here", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Add to Playlist
+                        new AddToFavoriteTask(videos.get(position).getId()).execute();
+                    }
+
                 }
 
             });
 
             if(videos.get(index).getIsFavorite()) {
                 String uri = "@drawable/button_pressed";  // where myresource.png is the file
+                int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
+                Drawable res = context.getResources().getDrawable(imageResource);
+                viewHolder.favorite.setImageDrawable(res);
+            }else{
+                String uri = "@drawable/button_normal";  // where myresource.png is the file
                 int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
                 Drawable res = context.getResources().getDrawable(imageResource);
                 viewHolder.favorite.setImageDrawable(res);
@@ -169,6 +185,37 @@ public class VideoListAdapter extends BaseAdapter {
             }else{
                 Toast.makeText(context, "Problem adding to playlist", Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    private class RemoveFromFavoriteTask extends AsyncTask<Void, Integer, Boolean>{
+
+        private String playlistItemID;
+
+        public RemoveFromFavoriteTask(String playlistItemID){
+            this.playlistItemID = playlistItemID;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try{
+                PlaylistUpdates.deletePlaylistItem(playlistItemID);
+                return true;
+            }catch (IOException e){
+                e.printStackTrace();
+
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if(aBoolean)
+                Toast.makeText(context, "Removed from playlist", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(context, "Unable to remove from playlist", Toast.LENGTH_SHORT).show();
+            playlistFragment.refreshList();
+
         }
     }
 

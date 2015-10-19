@@ -109,4 +109,11 @@ public class PlaylistUpdates {
         youtube.playlistItems().delete(playlistItemID).execute();
     }
 
+    public static List<Video> videoList(String videoIDs) throws IOException{
+        YouTube.Videos.List list = youtube.videos().list("snippet,statistics");
+        list.setId(videoIDs);
+        VideoListResponse response = list.execute();
+        return response.getItems();
+    }
+
 }

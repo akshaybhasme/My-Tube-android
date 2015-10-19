@@ -9,6 +9,7 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.api.services.youtube.model.PlaylistItem;
 import com.squareup.picasso.Picasso;
 import com.thetubeteam.mytube.models.Video;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VideoListAdapter extends BaseAdapter {
+
+    public static final String TAG = "VideoListAdapter";
 
     private List<Video> videos = new ArrayList<>();
     private LayoutInflater inflater;
@@ -63,7 +69,7 @@ public class VideoListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.row_video, new LinearLayout(context));
@@ -78,8 +84,6 @@ public class VideoListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View view) {
-                    //call API
-                    //Log.d("favorite", "***********************favorite**************************");
                     watchYoutubeVideo(videos.get(index).getId());
                 }
 
@@ -89,8 +93,7 @@ public class VideoListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View view) {
-                    //call API
-                    Log.d("Favorite", "***********************Favorite**************************");
+                    new AddToFavoriteTask(videos.get(position).getId()).execute();
                 }
 
             });
@@ -132,5 +135,35 @@ public class VideoListAdapter extends BaseAdapter {
         TextView name, desc;
         RelativeLayout rlayout;
         ImageButton favorite;
+    }
+
+    private class AddToFavoriteTask extends AsyncTask<Void, Integer, PlaylistItem>{
+
+        private String videoID;
+
+        public AddToFavoriteTask(String videoID){
+            this.videoID = videoID;
+        }
+
+        @Override
+        protected PlaylistItem doInBackground(Void... voids) {
+            try{
+                Log.d(TAG, "Adding to playlist "+videoID);
+                 return PlaylistUpdates.insertPlaylistItem(Constants.SJSU_PLAYLIST.getId(), videoID);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(PlaylistItem playlistItem) {
+            if(playlistItem != null){
+                Toast.makeText(context, "Video added to playlist", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "Problem adding to playlist", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ public class Video {
     private String desc;
     private String thumbnail;
     private String link;
+    private boolean isFavorite;
 
     public void setId(String id) {
         this.id = id;
@@ -28,6 +29,10 @@ public class Video {
         this.link = link;
     }
 
+    public void setIsFavorite(boolean b) {
+        this.isFavorite= b;
+    }
+
     public String getId() {
         return id;
     }
@@ -46,6 +51,10 @@ public class Video {
 
     public String getLink() {
         return link;
+    }
+
+    public boolean getIsFavorite() {
+        return isFavorite;
     }
 
 }

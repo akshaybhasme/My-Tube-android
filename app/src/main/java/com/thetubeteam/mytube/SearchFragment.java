@@ -20,6 +20,7 @@ import com.thetubeteam.mytube.models.Video;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class SearchFragment extends Fragment {
 
@@ -114,7 +115,8 @@ public class SearchFragment extends Fragment {
             List<Video> videos = new ArrayList<>();
 
             List<SearchResult> searchResults = SearchUtil.search(query);
-
+            Set<String> list=PlaylistFragment.videosList;
+            System.out.print("asdhkjhaskjdksad*******************"+list);
             if(searchResults != null){
                 for(int i = 0; i < searchResults.size(); i++){
                     SearchResult searchResult = searchResults.get(i);
@@ -122,7 +124,13 @@ public class SearchFragment extends Fragment {
                     video.setId(searchResult.getId().getVideoId());
                     video.setName("" + searchResult.getSnippet().getTitle());
                     video.setDesc("" + searchResult.getSnippet().getPublishedAt());
-                    video.setThumbnail(""+searchResult.getSnippet().getThumbnails().getDefault().getUrl());
+                    video.setThumbnail("" + searchResult.getSnippet().getThumbnails().getDefault().getUrl());
+                    if(video.getName().contains("Inside a"))
+                        System.out.print("***************************"+searchResult.getId());
+                    if(list!=null)
+                        video.setIsFavorite(list.contains(searchResult.getId()));
+                    else
+                        video.setIsFavorite(false);
                     videos.add(video);
                 }
             }

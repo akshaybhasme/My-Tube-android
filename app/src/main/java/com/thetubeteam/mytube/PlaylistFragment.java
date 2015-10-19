@@ -21,6 +21,8 @@ import com.thetubeteam.mytube.models.Video;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -110,7 +112,7 @@ public class PlaylistFragment extends Fragment {
         }
 
     }
-
+    static Set<String> videosList=null;
     private class ListSJSUPlaylistTask extends AsyncTask<Void, Integer, List<PlaylistItem>>{
 
         @Override
@@ -125,18 +127,22 @@ public class PlaylistFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<PlaylistItem> playlistItems) {
-            List<Video> videos = new ArrayList<>();
+            List<Video> videos= new ArrayList<>();
+            videosList=new HashSet<>();
             if(playlistItems != null){
                 Log.d(TAG, "playlistItems.size() "+playlistItems.size());
                 for(int i = 0; i < playlistItems.size(); i++){
                     PlaylistItem item = playlistItems.get(i);
                     Video video = new Video();
-                    video.setId(item.getId());
+                    video.setId(item.getSnippet().getResourceId().getVideoId());
                     video.setName(item.getSnippet().getTitle());
                     video.setDesc(""); //TODO
+                    video.setIsFavorite(true);
                     video.setThumbnail(item.getSnippet().getThumbnails().getDefault().getUrl());
+                    videosList.add(item.getSnippet().getResourceId().getVideoId());
                     videos.add(video);
                     Log.e(TAG, video.getName());
+
                 }
             }
             adapter.setVideos(videos);

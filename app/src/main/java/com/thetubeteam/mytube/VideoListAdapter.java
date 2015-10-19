@@ -4,6 +4,10 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,7 +95,12 @@ public class VideoListAdapter extends BaseAdapter {
 
             });
 
-
+            if(videos.get(index).getIsFavorite()) {
+                String uri = "@drawable/button_pressed";  // where myresource.png is the file
+                int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
+                Drawable res = context.getResources().getDrawable(imageResource);
+                viewHolder.favorite.setImageDrawable(res);
+            }
 
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.tvVideoTitle, viewHolder.name);

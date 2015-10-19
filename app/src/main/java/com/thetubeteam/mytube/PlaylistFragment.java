@@ -122,39 +122,48 @@ public class PlaylistFragment extends Fragment {
 
     }
     static Set<String> videosList=null;
-    private class ListSJSUPlaylistTask extends AsyncTask<Void, Integer, List<PlaylistItem>>{
+    private class ListSJSUPlaylistTask extends AsyncTask<Void, Integer, List<Video>>{
 
         @Override
-        protected List<PlaylistItem> doInBackground(Void... voids) {
+        protected List<Video> doInBackground(Void... voids) {
+            List<Video> videos = new ArrayList<>();
+
             try{
-                return PlaylistUpdates.listPlaylistItems(Constants.SJSU_PLAYLIST.getId());
+                List<PlaylistItem> playlistResults = PlaylistUpdates.listPlaylistItems(Constants.SJSU_PLAYLIST.getId());
+
+                StringBuilder videoIDs = new StringBuilder();
+                videosList=new HashSet<>();
+
+                for(int i = 0; i < playlistResults.size(); i++){
+                    PlaylistItem item = playlistResults.get(i);
+                    videoIDs.append(","+item.getSnippet().getResourceId().getVideoId());
+                    videosList.add(item.getSnippet().getResourceId().getVideoId());
+                }
+
+                List<com.google.api.services.youtube.model.Video> videoList = PlaylistUpdates.videoList(videoIDs.toString());
+
+                for(int i = 0; i < playlistResults.size(); i++){
+                    PlaylistItem searchResult = playlistResults.get(i);
+                    Video video = new Video();
+                    video.setId(searchResult.getSnippet().getResourceId().getVideoId());
+                    video.setName("" + searchResult.getSnippet().getTitle());
+                    video.setDesc("Published on: " + SearchFragment.formatDate(searchResult.getSnippet().getPublishedAt()) + "\nNumber of Views: " + videoList.get(i).getStatistics().getViewCount());
+                    video.setThumbnail("" + searchResult.getSnippet().getThumbnails().getDefault().getUrl());
+                    video.setIsFavorite(true);
+                    video.setPlaylistItemID(searchResult.getId());
+                    videos.add(video);
+                }
+
+
             }catch (IOException e){
                 e.printStackTrace();
             }
-            return null;
+
+            return videos;
         }
 
         @Override
-        protected void onPostExecute(List<PlaylistItem> playlistItems) {
-            List<Video> videos= new ArrayList<>();
-            videosList=new HashSet<>();
-            if(playlistItems != null){
-                Log.d(TAG, "playlistItems.size() "+playlistItems.size());
-                for(int i = 0; i < playlistItems.size(); i++){
-                    PlaylistItem item = playlistItems.get(i);
-                    Video video = new Video();
-                    video.setId(item.getSnippet().getResourceId().getVideoId());
-                    video.setName(item.getSnippet().getTitle());
-                    video.setDesc(""); //TODO
-                    video.setIsFavorite(true);
-                    video.setThumbnail(item.getSnippet().getThumbnails().getDefault().getUrl());
-                    video.setPlaylistItemID(item.getId());
-                    videosList.add(item.getSnippet().getResourceId().getVideoId());
-                    videos.add(video);
-                    Log.e(TAG, video.getName());
-
-                }
-            }
+        protected void onPostExecute(List<Video> videos) {
             adapter.setVideos(videos);
         }
     }

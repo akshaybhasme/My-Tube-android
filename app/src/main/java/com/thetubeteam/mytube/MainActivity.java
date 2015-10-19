@@ -53,13 +53,28 @@ public class MainActivity extends ActionBarActivity {
         final EditText search = (EditText) getSupportActionBar().getCustomView();
 
         search.setOnKeyListener(new View.OnKeyListener() {
+            int count=0;
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if(mViewPager.getCurrentItem()==1)
+                    count=0;
+                else
+                    count++;
+
+                if(count>1 && mViewPager.getCurrentItem()==0)
+                    if (keyEvent.getKeyCode() ==KeyEvent.KEYCODE_BACK ) {
+                        finish();
+                        return true;
+                    }
+
                 Log.d(TAG, search.getText().toString());
                 mViewPager.setCurrentItem(0, true);
                 searchFragment.search(search.getText().toString());
+
                 return true;
             }
+
         });
 
         searchFragment = SearchFragment.newInstance();

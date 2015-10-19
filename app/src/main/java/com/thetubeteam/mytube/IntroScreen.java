@@ -59,6 +59,7 @@ public class IntroScreen extends Activity {
 	private void startOauthFlow(Oauth2Params oauth2Params) {
 		Constants.OAUTH2PARAMS = oauth2Params;
 		startActivity(new Intent().setClass(this,OAuthAccessTokenActivity.class));
+        finish();
 	}	
 	
 	/**

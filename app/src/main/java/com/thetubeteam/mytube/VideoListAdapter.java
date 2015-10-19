@@ -95,34 +95,31 @@ public class VideoListAdapter extends BaseAdapter {
 
                 @Override
                 public void onClick(View view) {
-                    if(videos.get(position).getIsFavorite()){
-                       // Remove from playlist
+                    if (videos.get(position).getIsFavorite()) {
+                        // Remove from playlist
                         String playlistItemID = videos.get(position).getPlaylistItemID();
-                        if(playlistItemID != null)
+                        if (playlistItemID != null){
                             new RemoveFromFavoriteTask(playlistItemID).execute();
+
+                            setFavoriteDisabled(viewHolder.favorite);
+                            Video v = videos.get(position);
+                            v.setIsFavorite(false);
+                            videos.set(position, v);
+                        }
                         else
                             Toast.makeText(context, "Operation not supported here", Toast.LENGTH_SHORT).show();
                     } else {
                         // Add to Playlist
                         new AddToFavoriteTask(videos.get(position).getId()).execute();
+                        setFavoriteEnabled(viewHolder.favorite);
+                        Video v = videos.get(position);
+                        v.setIsFavorite(true);
+                        videos.set(position, v);
                     }
 
                 }
 
             });
-
-            if(videos.get(index).getIsFavorite()) {
-                String uri = "@drawable/button_pressed";  // where myresource.png is the file
-                int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
-                Drawable res = context.getResources().getDrawable(imageResource);
-                viewHolder.favorite.setImageDrawable(res);
-            }else{
-                String uri = "@drawable/button_normal";  // where myresource.png is the file
-                int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
-                Drawable res = context.getResources().getDrawable(imageResource);
-                viewHolder.favorite.setImageDrawable(res);
-            }
-
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.tvVideoTitle, viewHolder.name);
             convertView.setTag(R.id.tvVideoDesc, viewHolder.desc);
@@ -130,11 +127,30 @@ public class VideoListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        setFavoriteDisabled(viewHolder.favorite);
+        if(videos.get(position).getIsFavorite()) {
+            setFavoriteEnabled(viewHolder.favorite);
+        }
+
         viewHolder.name.setText(videos.get(position).getName());
         viewHolder.desc.setText(videos.get(position).getDesc());
         Picasso.with(context).load(videos.get(position).getThumbnail()).into(viewHolder.thumbail);
 
         return convertView;
+    }
+
+    private void setFavoriteEnabled(ImageView imageView){
+        String uri = "@drawable/button_pressed";
+        int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
+        Drawable res = context.getResources().getDrawable(imageResource);
+        imageView.setImageDrawable(res);
+    }
+
+    private void setFavoriteDisabled(ImageView imageView){
+        String uri = "@drawable/button_normal";
+        int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
+        Drawable res = context.getResources().getDrawable(imageResource);
+        imageView.setImageDrawable(res);
     }
 
     public void watchYoutubeVideo(String id){

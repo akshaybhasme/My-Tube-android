@@ -65,6 +65,8 @@ public class MainActivity extends ActionBarActivity {
         searchFragment = SearchFragment.newInstance();
         playlistFragment = PlaylistFragment.newInstance();
 
+        searchFragment.setPlaylistFragment(playlistFragment);
+
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         mViewPager = (ViewPager) findViewById(R.id.container);

@@ -1,5 +1,7 @@
 package com.thetubeteam.mytube;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 
@@ -14,11 +16,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.IOException;
+
 public class MainActivity extends ActionBarActivity {
 
     public static final String TAG = "MainActivity";
-
-    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     private ViewPager mViewPager;
 
@@ -31,6 +33,19 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences prefs;
+        OAuth2Helper oAuth2Helper;
+
+        SectionsPagerAdapter mSectionsPagerAdapter;
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        oAuth2Helper = new OAuth2Helper(prefs);
+
+        try{
+            PlaylistUpdates.init(oAuth2Helper.loadCredential());
+        }catch(IOException e){
+            e.printStackTrace();
+        }
 
         getSupportActionBar().setCustomView(R.layout.searchbox);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -91,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
                 case 0:
                     return "Search";
                 case 1:
-                    return "Playlist";
+                    return "Favorites";
             }
             return null;
         }

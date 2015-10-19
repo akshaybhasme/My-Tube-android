@@ -1,12 +1,20 @@
 package com.thetubeteam.mytube;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -59,6 +67,32 @@ public class VideoListAdapter extends BaseAdapter {
             viewHolder.name = (TextView) convertView.findViewById(R.id.tvVideoTitle);
             viewHolder.desc = (TextView) convertView.findViewById(R.id.tvVideoDesc);
             viewHolder.thumbail = (ImageView) convertView.findViewById(R.id.ivVideoThumbnail);
+            viewHolder.rlayout = (RelativeLayout) convertView.findViewById(R.id.RlayoutId);
+            viewHolder.favorite = (ImageButton) convertView.findViewById(R.id.favorite);
+            final int index=position;
+            viewHolder.rlayout.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    //call API
+                    //Log.d("favorite", "***********************favorite**************************");
+                    watchYoutubeVideo(videos.get(index).getId());
+                }
+
+            });
+
+            viewHolder.favorite.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    //call API
+                    Log.d("Favorite", "***********************Favorite**************************");
+                }
+
+            });
+
+
+
             convertView.setTag(viewHolder);
             convertView.setTag(R.id.tvVideoTitle, viewHolder.name);
             convertView.setTag(R.id.tvVideoDesc, viewHolder.desc);
@@ -73,8 +107,21 @@ public class VideoListAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void watchYoutubeVideo(String id){
+        try{
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
+            context.startActivity(intent);
+        }catch (ActivityNotFoundException ex){
+            Intent intent=new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("http://www.youtube.com/watch?v="+id));
+            context.startActivity(intent);
+        }
+    }
+
     public static class ViewHolder{
         ImageView thumbail;
         TextView name, desc;
+        RelativeLayout rlayout;
+        ImageButton favorite;
     }
 }

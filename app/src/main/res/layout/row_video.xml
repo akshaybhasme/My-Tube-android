@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@+id/ivVideoThumbnail"
-        android:padding="5dp">
+        android:padding="5dp"
+        android:id="@+id/RlayoutId">
 
         <TextView
             android:id="@+id/tvVideoTitle"
@@ -34,5 +35,12 @@
             android:textSize="10sp"/>
 
     </RelativeLayout>
+
+    <ImageButton android:id="@+id/favorite"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:src="@drawable/star"
+        android:background="#00ffffff"/>
 
 </RelativeLayout>

@@ -39,6 +39,8 @@ public class VideoListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context context;
 
+    private PlaylistFragment playlistFragment;
+
     public VideoListAdapter(Context context){
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -161,9 +163,17 @@ public class VideoListAdapter extends BaseAdapter {
         protected void onPostExecute(PlaylistItem playlistItem) {
             if(playlistItem != null){
                 Toast.makeText(context, "Video added to playlist", Toast.LENGTH_SHORT).show();
+                if(playlistFragment != null){
+                    playlistFragment.refreshList();
+                }
             }else{
                 Toast.makeText(context, "Problem adding to playlist", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void setPlaylistFragment(PlaylistFragment fragment){
+        Log.e(TAG, "Playlist fragment set!!!");
+        this.playlistFragment = fragment;
     }
 }

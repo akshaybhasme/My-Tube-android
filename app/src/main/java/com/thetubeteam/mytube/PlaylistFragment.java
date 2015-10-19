@@ -42,14 +42,18 @@ public class PlaylistFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new VideoListAdapter(getActivity());
+        adapter.setPlaylistFragment(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
-
         videoListView = new ListView(getActivity());
-        adapter = new VideoListAdapter(getActivity());
+
         videoListView.setAdapter(adapter);
 
         videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -62,6 +66,11 @@ public class PlaylistFragment extends Fragment {
         checkAndAddSJSUPlaylist();
 
         return videoListView;
+    }
+
+    public void refreshList() {
+        Log.e(TAG, "refreshing !!!");
+        new ListSJSUPlaylistTask().execute();
     }
 
     /**

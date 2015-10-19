@@ -1,18 +1,11 @@
 package com.thetubeteam.mytube;
 
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.api.client.util.DateTime;
@@ -26,15 +19,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 public class SearchFragment extends Fragment {
 
 
     private VideoListAdapter adapter;
+    private PlaylistFragment playlistFragment;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        adapter = new VideoListAdapter(getActivity());
     }
 
     @Override
@@ -44,68 +43,19 @@ public class SearchFragment extends Fragment {
         ListView videoListView;
 
         videoListView = new ListView(getActivity());
-        adapter = new VideoListAdapter(getActivity());
         videoListView.setAdapter(adapter);
-
-        videoListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //watchYoutubeVideo(adapter.getVideo(i).getId());
-                Log.d("bbbbb","*************************************************");
-            }
-        });
-
-        videoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view,
-                                           int i, long l) {
-                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create(); //Read Update
-                alertDialog.setTitle("Add");
-                alertDialog.setMessage("Add element to Playlist");
-
-                final int index=i;
-
-                alertDialog.setButton("Add", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        addVideoToPlayList(adapter.getVideo(index).getId());
-                    }
-
-                });
-
-
-                alertDialog.show();
-                return true;
-            }
-
-        });
+        adapter.setPlaylistFragment(playlistFragment);
 
         return videoListView;
     }
 
 
-    public  void addVideoToPlayList(String id) {
-        //Add video to playlist
-
-    }
-
-    public  void removeVideoFromPlayList(String id) {
-        //Remove video from playlist
-
-    }
-
     public void search(String query){
         new SearchTask(query).execute();
     }
 
-    public void watchYoutubeVideo(String id){
-        try{
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + id));
-            startActivity(intent);
-        }catch (ActivityNotFoundException ex){
-            Intent intent=new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("http://www.youtube.com/watch?v="+id));
-            startActivity(intent);
-        }
+    public void setPlaylistFragment(PlaylistFragment playlistFragment){
+        this.playlistFragment = playlistFragment;
     }
 
     public class SearchTask extends AsyncTask<Void, Integer, List<Video>>{

@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 public class SearchFragment extends Fragment {
 
@@ -48,7 +49,6 @@ public class SearchFragment extends Fragment {
 
         return videoListView;
     }
-
 
     public void search(String query){
         new SearchTask(query).execute();
@@ -84,13 +84,17 @@ public class SearchFragment extends Fragment {
                 List<com.google.api.services.youtube.model.Video> videoList = PlaylistUpdates.videoList(videoIDs.toString());
 
                 if(searchResults != null){
+                    Set<String> list=PlaylistFragment.videosList;
                     for(int i = 0; i < searchResults.size(); i++){
                         SearchResult searchResult = searchResults.get(i);
                         Video video = new Video();
                         video.setId(searchResult.getId().getVideoId());
                         video.setName("" + searchResult.getSnippet().getTitle());
-                        video.setDesc("Published on: " + formatDate(searchResult.getSnippet().getPublishedAt())+"\nNumber of Views: "+videoList.get(i).getStatistics().getViewCount());
+                        video.setDesc("Published on: " + formatDate(searchResult.getSnippet().getPublishedAt()) + "\nNumber of Views: " + videoList.get(i).getStatistics().getViewCount());
                         video.setThumbnail("" + searchResult.getSnippet().getThumbnails().getDefault().getUrl());
+                        video.setIsFavorite(list != null ? list.contains(searchResult.getId().getVideoId()) : false);
+
+//                        Log.d("RESULT********", "" + list.contains(searchResult.getId().getVideoId()));
                         videos.add(video);
 
                     }
@@ -110,6 +114,7 @@ public class SearchFragment extends Fragment {
             super.onPostExecute(searchResults);
         }
     }
+
 
     public static DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
